@@ -1,141 +1,173 @@
 import 'tailwindcss/tailwind.css';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { getAuth, signOut } from "firebase/auth";
-import { getFirestore, collection, addDoc, query, orderBy, limit, onSnapshot } from "firebase/firestore";
-import { getStorage, ref, uploadBytes, listAll, getDownloadURL } from "firebase/storage";
 
-const Dashboard = () => {
-  const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState('');
-  const [files, setFiles] = useState([]);
-  const [uploadingFile, setUploadingFile] = useState(null);
-  const messagesEndRef = useRef(null);
+const Dashboard = ({ onNavigateToProfile }) => {
   const auth = getAuth();
-  const db = getFirestore();
-  const storage = getStorage();
+  const [messages, setMessages] = useState([]);
+  const [inputMessage, setInputMessage] = useState('');
+  const [files, setFiles] = useState([]);
+  const [chatHistory, setChatHistory] = useState([
+    { id: 1, title: "Course Schedule" },
+    { id: 2, title: "Calculus Homework" },
+    { id: 3, title: "Campus Events" },
+  ]);
+  const [currentChat, setCurrentChat] = useState({ id: 0, title: "New Chat" });
+  const [fileCategory, setFileCategory] = useState('');
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const messagesEndRef = useRef(null);
 
-  useEffect(() => {
-    const q = query(collection(db, 'messages'), orderBy('createdAt'), limit(50));
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const messages = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setMessages(messages);
-    });
-
-    listFiles();
-
-    return () => unsubscribe();
-  }, []);
+  const featuresData = [
+    { name: 'Personalized', icon: '📚' },
+    { name: 'Tutoring', icon: '🧑‍🏫' },
+    { name: 'Feedback', icon: '✅' },
+    { name: 'Visual', icon: '🖼️' },
+    { name: 'Adaptive', icon: '🧠' },
+  ];
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const sendMessage = async (e) => {
+  const handleSignOut = () => signOut(auth);
+
+  const handleSendMessage = (e) => {
     e.preventDefault();
-    if (newMessage.trim() === '') return;
-
-    await addDoc(collection(db, 'messages'), {
-      text: newMessage,
-      createdAt: new Date(),
-      userId: auth.currentUser.uid,
-      userName: auth.currentUser.displayName || auth.currentUser.email
-    });
-
-    setNewMessage('');
+    if (inputMessage.trim() === '') return;
+    setMessages([...messages, { text: inputMessage, sender: 'user' }]);
+    setInputMessage('');
+    // Simulate AI response
+    setTimeout(() => {
+      setMessages(prev => [...prev, { text: `AI response to: ${inputMessage}`, sender: 'ai' }]);
+    }, 1000);
   };
 
-  const listFiles = async () => {
-    const listRef = ref(storage, `files/${auth.currentUser.uid}`);
-    const res = await listAll(listRef);
-    const filesPromises = res.items.map(async (itemRef) => {
-      const url = await getDownloadURL(itemRef);
-      return { name: itemRef.name, url };
-    });
-    const files = await Promise.all(filesPromises);
-    setFiles(files);
-  };
-
-  const handleFileUpload = async (e) => {
+  const handleFileUpload = (e) => {
     const file = e.target.files[0];
-    if (!file) return;
-
-    setUploadingFile(file.name);
-    const storageRef = ref(storage, `files/${auth.currentUser.uid}/${file.name}`);
-    await uploadBytes(storageRef, file);
-    await listFiles();
-    setUploadingFile(null);
+    if (file && fileCategory) {
+      setFiles([...files, { file, category: fileCategory }]);
+      setMessages([...messages, { text: `File uploaded: ${file.name} (${fileCategory})`, sender: 'system' }]);
+      setFileCategory('');
+    }
   };
 
-  const handleSignOut = () => {
-    signOut(auth);
+  const handleNewChat = () => {
+    const newChatId = chatHistory.length + 1;
+    const newChat = { id: newChatId, title: `New Chat ${newChatId}` };
+    setChatHistory([...chatHistory, newChat]);
+    setCurrentChat(newChat);
+    setMessages([]);
   };
 
   return (
-    <div className="flex h-screen bg-gray-100">
-      {/* Sidebar */}
-      <div className="w-64 bg-white shadow-md">
-        <div className="p-4">
-          <h2 className="text-xl font-semibold text-gray-800">AI Student Copilot</h2>
-          <p className="text-sm text-gray-600">{auth.currentUser.email}</p>
+    <div className="flex h-screen bg-gray-900 text-white">
+      {/* Collapsible Sidebar */}
+      <div className={`bg-gray-800 flex flex-col transition-all duration-300 ${isSidebarCollapsed ? 'w-16' : 'w-64'}`}>
+        <div className="p-4 flex justify-between items-center border-b border-gray-700">
+          {!isSidebarCollapsed && <h2 className="text-xl font-semibold text-blue-400">Copilot</h2>}
+          <button onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)} className="text-gray-400 hover:text-white">
+            {isSidebarCollapsed ? '→' : '←'}
+          </button>
         </div>
-        <nav className="mt-4">
-          <a href="#" className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200">Dashboard</a>
-          <a href="#" className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200">Courses</a>
-          <a href="#" className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200">Assignments</a>
-          <a href="#" className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200">Resources</a>
+        
+        <nav className="flex-grow overflow-y-auto">
+          {featuresData.map((feature, index) => (
+            <button key={index} className="w-full text-left py-2 px-4 text-sm text-gray-300 hover:bg-gray-700 flex items-center">
+              <span className="mr-2">{feature.icon}</span>
+              {!isSidebarCollapsed && feature.name}
+            </button>
+          ))}
+          
+          {!isSidebarCollapsed && (
+            <div className="mt-4 px-4">
+              <button onClick={handleNewChat} className="w-full py-2 px-4 mb-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                New Chat
+              </button>
+              {chatHistory.map((chat) => (
+                <button
+                  key={chat.id}
+                  onClick={() => setCurrentChat(chat)}
+                  className={`w-full text-left py-2 px-4 text-sm rounded mb-1 ${
+                    currentChat.id === chat.id ? 'bg-gray-700' : 'hover:bg-gray-700'
+                  }`}
+                >
+                  {chat.title}
+                </button>
+              ))}
+            </div>
+          )}
         </nav>
-        <div className="absolute bottom-0 w-64 p-4">
-          <button onClick={handleSignOut} className="w-full py-2 px-4 bg-red-500 text-white rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500">
-            Sign Out
+
+        <div className="p-4 border-t border-gray-700">
+          <button onClick={onNavigateToProfile} className="w-full py-2 px-4 mb-2 bg-gray-700 text-white rounded hover:bg-gray-600">
+            {isSidebarCollapsed ? '👤' : 'Profile'}
+          </button>
+          <button onClick={handleSignOut} className="w-full py-2 px-4 bg-red-500 text-white rounded hover:bg-red-600">
+            {isSidebarCollapsed ? '🚪' : 'Sign Out'}
           </button>
         </div>
       </div>
 
-      {/* Main Content */}
+      {/* Main Chat Area */}
       <div className="flex-1 flex flex-col">
-        {/* Chat Area */}
-        <div className="flex-1 overflow-y-auto p-4 bg-gray-50">
-          {messages.map((msg) => (
-            <div key={msg.id} className={`mb-4 ${msg.userId === auth.currentUser.uid ? 'text-right' : 'text-left'}`}>
-              <div className={`inline-block p-2 rounded-lg ${msg.userId === auth.currentUser.uid ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-800'}`}>
-                <p className="font-semibold">{msg.userName}</p>
-                <p>{msg.text}</p>
+        <header className="bg-gray-800 shadow-md p-4 flex justify-between items-center">
+          <h1 className="text-xl font-semibold">{currentChat.title}</h1>
+          <p className="text-sm text-gray-400">{auth.currentUser.email}</p>
+        </header>
+        
+        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          {messages.map((message, index) => (
+            <div key={index} className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+              <div className={`max-w-3/4 p-3 rounded-lg ${
+                message.sender === 'user' ? 'bg-blue-600' : 
+                message.sender === 'ai' ? 'bg-gray-700' : 
+                'bg-gray-600'
+              }`}>
+                {message.text}
               </div>
             </div>
           ))}
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Message Input */}
-        <form onSubmit={sendMessage} className="bg-gray-200 p-4">
-          <div className="flex items-center">
+        <div className="p-4 bg-gray-800 border-t border-gray-700">
+          <form onSubmit={handleSendMessage} className="flex space-x-2">
             <input
               type="text"
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-              placeholder="Type a message..."
-              className="flex-1 py-2 px-4 bg-white rounded-l-lg focus:outline-none"
+              value={inputMessage}
+              onChange={(e) => setInputMessage(e.target.value)}
+              placeholder="Type your message..."
+              className="flex-1 p-2 bg-gray-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            <button type="submit" className="py-2 px-4 bg-blue-500 text-white rounded-r-lg hover:bg-blue-600 focus:outline-none">
-              Send
-            </button>
-          </div>
-        </form>
+            <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">Send</button>
+          </form>
+        </div>
       </div>
 
       {/* File Management Sidebar */}
-      <div className="w-64 bg-white shadow-md p-4">
-        <h3 className="text-lg font-semibold mb-4">Files</h3>
+      <div className="w-64 bg-gray-800 shadow-md p-4 overflow-y-auto">
+        <h3 className="text-lg font-semibold mb-4 text-blue-400">Files & Resources</h3>
+        <select
+          value={fileCategory}
+          onChange={(e) => setFileCategory(e.target.value)}
+          className="w-full p-2 mb-2 bg-gray-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="">Select Category</option>
+          <option value="homework">Homework</option>
+          <option value="lecture">Lecture Notes</option>
+          <option value="project">Project</option>
+          <option value="other">Other</option>
+        </select>
         <input
           type="file"
           onChange={handleFileUpload}
-          className="mb-4"
+          className="mb-4 text-sm text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600"
         />
-        {uploadingFile && <p className="text-sm text-gray-600 mb-2">Uploading: {uploadingFile}</p>}
         <ul className="space-y-2">
           {files.map((file, index) => (
-            <li key={index} className="flex items-center justify-between">
-              <a href={file.url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">{file.name}</a>
+            <li key={index} className="flex items-center justify-between bg-gray-700 p-2 rounded-lg">
+              <span className="text-sm truncate">{file.file.name}</span>
+              <span className="text-xs bg-blue-500 text-white px-2 py-1 rounded-full">{file.category}</span>
             </li>
           ))}
         </ul>
