@@ -10,7 +10,11 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "firebase": "^10.12.3",
+    "firebase-functions": "^5.0.1",
     "lucide-react": "^0.407.0",
+    "openai": "^4.54.0",
+    "puppeteer": "^22.13.0",
+    "puppeteer-core": "^22.13.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-scripts": "5.0.1",
@@ -43,8 +47,8 @@
     ]
   },
   "devDependencies": {
-    "autoprefixer": "^10.4.19",
-    "postcss": "^8.4.39",
-    "tailwindcss": "^3.4.4"
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.40",
+    "tailwindcss": "^3.4.7"
   }
 }

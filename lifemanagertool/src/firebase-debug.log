@@ -1,0 +1,79 @@
+[debug] [2024-08-03T15:15:40.335Z] ----------------------------------------------------------------------
+[debug] [2024-08-03T15:15:40.337Z] Command:       /opt/homebrew/Cellar/node/21.6.2_1/bin/node /usr/local/bin/firebase deploy --only functions
+[debug] [2024-08-03T15:15:40.337Z] CLI Version:   9.17.0
+[debug] [2024-08-03T15:15:40.337Z] Platform:      darwin
+[debug] [2024-08-03T15:15:40.337Z] Node Version:  v21.6.2
+[debug] [2024-08-03T15:15:40.338Z] Time:          Sat Aug 03 2024 11:15:40 GMT-0400 (Eastern Daylight Time)
+[debug] [2024-08-03T15:15:40.338Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2024-08-03T15:15:40.378Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2024-08-03T15:15:40.378Z] > authorizing via signed-in user (dannytadesse709@gmail.com)
+[debug] [2024-08-03T15:15:40.379Z] [iam] checking project lifemanager-e9a32 for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2024-08-03T15:15:40.380Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/lifemanager-e9a32:testIamPermissions  
+ {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2024-08-03T15:15:40.638Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sat, 03 Aug 2024 15:15:40 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","server-timing":"gfet4t7; dur=127","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2024-08-03T15:15:40.639Z] >>> HTTP REQUEST POST https://iam.googleapis.com/v1/projects/lifemanager-e9a32/serviceAccounts/lifemanager-e9a32@appspot.gserviceaccount.com:testIamPermissions  
+ {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2024-08-03T15:15:40.853Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sat, 03 Aug 2024 15:15:40 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] 
+[info] === Deploying to 'lifemanager-e9a32'...
+[info] 
+[info] i  deploying functions 
+[debug] [2024-08-03T15:15:40.858Z] Validating nodejs source
+[debug] [2024-08-03T15:15:42.298Z] > [functions] package.json contents: {
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
+  "scripts": {
+    "serve": "firebase emulators:start --only functions",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "16"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "firebase-admin": "^11.8.0",
+    "firebase-functions": "^5.0.1"
+  },
+  "devDependencies": {
+    "firebase-functions-test": "^3.1.0"
+  },
+  "private": true
+}
+[debug] [2024-08-03T15:15:42.298Z] Building nodejs source
+[info] i  functions: ensuring required API cloudfunctions.googleapis.com is enabled... 
+[info] i  functions: ensuring required API cloudbuild.googleapis.com is enabled... 
+[debug] [2024-08-03T15:15:42.299Z] >>> HTTP REQUEST GET https://serviceusage.googleapis.com/v1/projects/lifemanager-e9a32/services/cloudfunctions.googleapis.com  
+ 
+[debug] [2024-08-03T15:15:42.299Z] >>> HTTP REQUEST GET https://serviceusage.googleapis.com/v1/projects/lifemanager-e9a32/services/runtimeconfig.googleapis.com  
+ 
+[debug] [2024-08-03T15:15:42.299Z] >>> HTTP REQUEST GET https://serviceusage.googleapis.com/v1/projects/lifemanager-e9a32/services/cloudbuild.googleapis.com  
+ 
+[debug] [2024-08-03T15:15:42.994Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sat, 03 Aug 2024 15:15:43 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2024-08-03T15:15:43.019Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sat, 03 Aug 2024 15:15:43 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] ✔  functions: required API cloudbuild.googleapis.com is enabled 
+[debug] [2024-08-03T15:15:43.049Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sat, 03 Aug 2024 15:15:43 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] ✔  functions: required API cloudfunctions.googleapis.com is enabled 
+[debug] [2024-08-03T15:15:43.050Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/lifemanager-e9a32/adminSdkConfig  
+ 
+[debug] [2024-08-03T15:15:43.531Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sat, 03 Aug 2024 15:15:43 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2024-08-03T15:15:43.533Z] >>> HTTP REQUEST GET https://runtimeconfig.googleapis.com/v1beta1/projects/lifemanager-e9a32/configs  
+ 
+[debug] [2024-08-03T15:15:43.764Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sat, 03 Aug 2024 15:15:43 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2024-08-03T15:15:43.772Z] Analyzing nodejs backend spec
+[debug] [2024-08-03T15:15:44.076Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/projects/lifemanager-e9a32/locations/-/functions  
+ 
+[debug] [2024-08-03T15:15:44.673Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sat, 03 Aug 2024 15:15:44 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2024-08-03T15:15:44.790Z] TypeError: Cannot read properties of undefined (reading 'length')
+    at Object.functionMatchesAnyGroup (/usr/local/lib/node_modules/firebase-tools/lib/deploy/functions/functionsDeployHelper.js:10:23)
+    at /usr/local/lib/node_modules/firebase-tools/lib/deploy/functions/deploymentPlanner.js:28:56
+    at Array.filter (<anonymous>)
+    at calculateRegionalFunctionChanges (/usr/local/lib/node_modules/firebase-tools/lib/deploy/functions/deploymentPlanner.js:28:17)
+    at Object.createDeploymentPlan (/usr/local/lib/node_modules/firebase-tools/lib/deploy/functions/deploymentPlanner.js:78:50)
+    at release (/usr/local/lib/node_modules/firebase-tools/lib/deploy/functions/release.js:28:48)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+[error] 
+[error] Error: An unexpected error has occurred.
