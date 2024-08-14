@@ -13,20 +13,21 @@ const openai = new OpenAI({
   dangerouslyAllowBrowser: true
 });
 
-const DEFAULT_ASSISTANT_ID = 'asst_sJcX7CiUVGw1xyuH3BwE8mgi';
-const CIS_ASSISTANT_ID = 'asst_fpIfIc3rlfvL4qDVmAcgYcas';
-const CIS_SENIOR_PROJECT_ASSISTANT_ID = 'asst_itHtToNbE2LB56RSBYXbeJKr';
-const E_COMMERCE_ASSISTANT_ID = 'asst_HxnThQ3z4KBxxzcyHsGkapoz';
+const DEFAULT_ASSISTANT_ID = process.env.REACT_APP_DEFAULT_ASSISTANT_ID;
+const CIS_ASSISTANT_ID = process.env.REACT_APP_CIS_ASSISTANT_ID;
+const CIS_SENIOR_PROJECT_ASSISTANT_ID = process.env.REACT_APP_CIS_SENIOR_PROJECT_ASSISTANT_ID;
+const E_COMMERCE_ASSISTANT_ID = process.env.REACT_APP_E_COMMERCE_ASSISTANT_ID;
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDR1WSRZY7pmOcPRR_RYwV5O5kSwLTSow8",
-  authDomain: "lifemanager-e9a32.firebaseapp.com",
-  projectId: "lifemanager-e9a32",
-  storageBucket: "lifemanager-e9a32.appspot.com",
-  messagingSenderId: "713689999202",
-  appId: "1:713689999202:web:83ab8f48464d01d5ff6e3b",
-  measurementId: "G-VQ06GJB1QN"
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 };
+
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
